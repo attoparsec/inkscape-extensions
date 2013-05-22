@@ -20,7 +20,7 @@
       <_item value="ANSI #200">ANSI #200</_item>
       <_item value="ANSI #240">ANSI #240</_item>
     </param>
-    <effect>
+    <effect needs-live-preview="false">
 	<object-type>all</object-type>
         <effects-menu>
             <submenu _name="Render"/>
