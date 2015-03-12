@@ -2,6 +2,8 @@ Inkscape Extensions -- Gears2 and Sprockets
 
 This is a set of Inkscape extensions for creating accurate and configurable profiles of gears and sprockets. These are specifically intended for use in laser cutter work, using the relevant industrial standards and real-world units to make matching a design with a pre-existing component as easy as possible.
 
+Note: The versions in the master branch will only work with Inkscape 0.91 and above. For older versions that work in earlier versions, use the Inkscape-0.48 branch.
+
 To use, simply place these files in your Inkscape extensions directory ($HOME/.config/inkscape/extensions). Under the Extensions -> Render menu you'll now find entries for Gears2 and Sprockets.
 
 Also included is cleanup.py, which is useful for adjusting the stroke weight and opacity of large groups of Inkscape objects, something the author has had to do far too often to get them to import properly into laser cutting software.

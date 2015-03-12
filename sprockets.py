@@ -20,48 +20,10 @@ Based on gears.py by Aaron Spike and Tavmjong Bah
 '''
 
 import inkex
-import simplestyle, sys
+import simplestyle
+import sys
 from math import *
 from svg import *
-
-def get_pitch(size):
-    return inkex.unittouu({
-        'ANSI #25': '6.35mm',
-        'ANSI #35': '9.53mm',
-        'ANSI #40': '12.70mm',
-        'ANSI #41': '12.70mm',
-        'ANSI #50': '15.88mm',
-        'ANSI #60': '19.05mm',
-        'ANSI #80': '25.40mm',
-        'ANSI #100': '31.75mm',
-        'ANSI #120': '38.10mm',
-        'ANSI #140': '44.45mm',
-        'ANSI #160': '50.80mm',
-        'ANSI #180': '57.15mm',
-        'ANSI #200': '63.50mm',
-        'ANSI #240': '76.20mm'
-        }[size])
-
-def get_roller_diameter(size):
-    return inkex.unittouu({
-        'ANSI #25': '3.30mm',
-        'ANSI #35': '5.08mm',
-        'ANSI #40': '7.77mm',
-        'ANSI #41': '7.92mm',
-        'ANSI #50': '10.16mm',
-        'ANSI #60': '11.91mm',
-        'ANSI #80': '15.88mm',
-        'ANSI #100': '19.05mm',
-        'ANSI #120': '22.23mm',
-        'ANSI #140': '25.40mm',
-        'ANSI #160': '28.58mm',
-        'ANSI #180': '37.08mm',
-        'ANSI #200': '39.67mm',
-        'ANSI #240': '47.63mm'
-        }[size])
-
-def invertX(p):
-    return (-p[0], p[1])
 
 class Sprockets(inkex.Effect):
     def __init__(self):
@@ -75,35 +37,75 @@ class Sprockets(inkex.Effect):
                         dest="size", default="ANSI #40",
                         help="Chain size (common values ANSI #35, ANSI #40, ANSI #60)")
 
+    def get_pitch(self, size):
+        return self.unittouu({
+            'ANSI #25': '6.35mm',
+            'ANSI #35': '9.53mm',
+            'ANSI #40': '12.70mm',
+            'ANSI #41': '12.70mm',
+            'ANSI #50': '15.88mm',
+            'ANSI #60': '19.05mm',
+            'ANSI #80': '25.40mm',
+            'ANSI #100': '31.75mm',
+            'ANSI #120': '38.10mm',
+            'ANSI #140': '44.45mm',
+            'ANSI #160': '50.80mm',
+            'ANSI #180': '57.15mm',
+            'ANSI #200': '63.50mm',
+            'ANSI #240': '76.20mm'
+            }[size])
+
+    def get_roller_diameter(self, size):
+        return self.unittouu({
+            'ANSI #25': '3.30mm',
+            'ANSI #35': '5.08mm',
+            'ANSI #40': '7.77mm',
+            'ANSI #41': '7.92mm',
+            'ANSI #50': '10.16mm',
+            'ANSI #60': '11.91mm',
+            'ANSI #80': '15.88mm',
+            'ANSI #100': '19.05mm',
+            'ANSI #120': '22.23mm',
+            'ANSI #140': '25.40mm',
+            'ANSI #160': '28.58mm',
+            'ANSI #180': '37.08mm',
+            'ANSI #200': '39.67mm',
+            'ANSI #240': '47.63mm'
+            }[size])
+
+    def invertX(self, p):
+        return (-p[0], p[1])
+
     def effect(self):
         size = self.options.size
 
-        P = get_pitch(size)
+        P = self.get_pitch(size)
         N = self.options.teeth
         PD = P / sin(pi / N)
         PR = PD / 2
 
-        # Equations taken from http://www.gearseds.com/files/design_draw_sprocket_5.pdf
+        # Equations taken from
+        # http://www.gearseds.com/files/design_draw_sprocket_5.pdf
         # Also referenced:
         # http://en.wikipedia.org/wiki/Roller_chain (of course)
         # and
-        # Chains for Power Transmission and Material Handling: 
+        # Chains for Power Transmission and Material Handling:
         # Design and Applications Handbook
         # American Chain Association, 1982
 
-        Dr = get_roller_diameter(size)
-        Ds = 1.0005 * Dr + inkex.unittouu('0.003in')
+        Dr = self.get_roller_diameter(size)
+        Ds = 1.0005 * Dr + self.unittouu('0.003in')
         R = Ds / 2 # seating curve radius
         A = radians(35 + 60 / N)
         B = radians(18 - 56 / N)
         ac = 0.8 * Dr
         M = ac * cos(A)
         T = ac * sin(A)
-        E = 1.3025 * Dr + inkex.unittouu('0.0015in') # transition radius
+        E = 1.3025 * Dr + self.unittouu('0.0015in') # transition radius
         ab = 1.4 * Dr
         W = ab * cos(pi / N)
         V = ab * sin(pi / N)
-        F = Dr * (0.8 * cos(radians(18 - 56 / N)) + 1.4 * cos(radians(17 - 64/N)) - 1.3025) - inkex.unittouu('0.0015in'); # topping curve radius
+        F = Dr * (0.8 * cos(radians(18 - 56 / N)) + 1.4 * cos(radians(17 - 64 / N)) - 1.3025) - self.unittouu('0.0015in') # topping curve radius
         
         svg = ""
 
@@ -177,7 +179,7 @@ class Sprockets(inkex.Effect):
             tanl = (tanl_X, tanl_m * tanl_X + tanl_b)
 
             # Calculate tip line, angle t_inc/2 from Y axis
-            tip_m = -tan(pi/2 + t_inc/2) # Negative because we're in -Y space
+            tip_m = -tan(pi / 2 + t_inc / 2) # Negative because we're in -Y space
             tip_b = 0
 
             # Calculate intersection of tip line with topping curve
@@ -196,10 +198,10 @@ class Sprockets(inkex.Effect):
             svg += SVG_circle(tanl, F, 1, theta) # Topping curve left
             svg += SVG_line(y, theta) # Tangent line left
             svg += SVG_circle(x, E, 0, theta) # Transitional curve left
-            svg += SVG_circle(invertX(x), R, 0, theta) # Seating curve
-            svg += SVG_circle(invertX(y), E, 0, theta) # Transitionl curve right
-            svg += SVG_line(invertX(tanl), theta) # Tangent line right
-            svg += SVG_circle(invertX(tip), F, 1, theta) # Topping curve right
+            svg += SVG_circle(self.invertX(x), R, 0, theta) # Seating curve
+            svg += SVG_circle(self.invertX(y), E, 0, theta) # Transitionl curve right
+            svg += SVG_line(self.invertX(tanl), theta) # Tangent line right
+            svg += SVG_circle(self.invertX(tip), F, 1, theta) # Topping curve right
 
         svg += SVG_close()
             
@@ -209,7 +211,7 @@ class Sprockets(inkex.Effect):
                            'fill': 'none'
                            }
         g_attribs = {inkex.addNS('label','inkscape'): 'Sprocket ' + size + "-" + str(N),
-                     'transform': 'translate(' + str( self.view_center[0] ) + ',' + str( self.view_center[1] ) + ')',
+                     'transform': 'translate(' + str(self.view_center[0]) + ',' + str(self.view_center[1]) + ')',
                      'style' : simplestyle.formatStyle(sprocket_style),
                      'd' : svg  }
         g = inkex.etree.SubElement(self.current_layer, inkex.addNS('path','svg'), g_attribs)

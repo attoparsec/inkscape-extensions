@@ -55,7 +55,7 @@ class Gears(inkex.Effect):
             # Diametral pitch
             size = 25.4 / size
 
-        m = inkex.unittouu(str(size) + "mm")
+        m = self.unittouu(str(size) + "mm")
 
         if (orientation == 2):
             svg = CreateInternalGear(m, Z, phi)
