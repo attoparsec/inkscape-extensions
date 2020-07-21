@@ -24,21 +24,22 @@ import simplestyle
 import sys
 from math import *
 from svg import *
+from lxml import etree
 
 class Sprockets(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
-        self.OptionParser.add_option("-t", "--teeth",
-                        action="store", type="int",
+        self.arg_parser.add_argument("-t", "--teeth",
+                        action="store", type=int,
                         dest="teeth", default=24,
                         help="Number of teeth")
-        self.OptionParser.add_option("-s", "--size",
-                        action="store", type="string",
+        self.arg_parser.add_argument("-s", "--size",
+                        action="store", type=str,
                         dest="size", default="ANSI #40",
                         help="Chain size (common values ANSI #35, ANSI #40, ANSI #60)")
 
     def get_pitch(self, size):
-        return self.unittouu({
+        return self.svg.unittouu({
             'ANSI #25': '6.35mm',
             'ANSI #35': '9.53mm',
             'ANSI #40': '12.70mm',
@@ -56,7 +57,7 @@ class Sprockets(inkex.Effect):
             }[size])
 
     def get_roller_diameter(self, size):
-        return self.unittouu({
+        return self.svg.unittouu({
             'ANSI #25': '3.30mm',
             'ANSI #35': '5.08mm',
             'ANSI #40': '7.77mm',
@@ -94,18 +95,18 @@ class Sprockets(inkex.Effect):
         # American Chain Association, 1982
 
         Dr = self.get_roller_diameter(size)
-        Ds = 1.0005 * Dr + self.unittouu('0.003in')
+        Ds = 1.0005 * Dr + self.svg.unittouu('0.003in')
         R = Ds / 2 # seating curve radius
         A = radians(35 + 60 / N)
         B = radians(18 - 56 / N)
         ac = 0.8 * Dr
         M = ac * cos(A)
         T = ac * sin(A)
-        E = 1.3025 * Dr + self.unittouu('0.0015in') # transition radius
+        E = 1.3025 * Dr + self.svg.unittouu('0.0015in') # transition radius
         ab = 1.4 * Dr
         W = ab * cos(pi / N)
         V = ab * sin(pi / N)
-        F = Dr * (0.8 * cos(radians(18 - 56 / N)) + 1.4 * cos(radians(17 - 64 / N)) - 1.3025) - self.unittouu('0.0015in') # topping curve radius
+        F = Dr * (0.8 * cos(radians(18 - 56 / N)) + 1.4 * cos(radians(17 - 64 / N)) - 1.3025) - self.svg.unittouu('0.0015in') # topping curve radius
         
         svg = ""
 
@@ -211,11 +212,11 @@ class Sprockets(inkex.Effect):
                            'fill': 'none'
                            }
         g_attribs = {inkex.addNS('label','inkscape'): 'Sprocket ' + size + "-" + str(N),
-                     'transform': 'translate(' + str(self.view_center[0]) + ',' + str(self.view_center[1]) + ')',
-                     'style' : simplestyle.formatStyle(sprocket_style),
+                     'transform': 'translate(' + str(self.svg.namedview.center[0]) + ',' + str(self.svg.namedview.center[1]) + ')',
+                     'style' : str(inkex.Style(sprocket_style)),
                      'd' : svg  }
-        g = inkex.etree.SubElement(self.current_layer, inkex.addNS('path','svg'), g_attribs)
+        g = etree.SubElement(self.svg.get_current_layer(), inkex.addNS('path','svg'), g_attribs)
 
 if __name__ == '__main__':
     e = Sprockets()
-    e.affect()
+    e.run()
