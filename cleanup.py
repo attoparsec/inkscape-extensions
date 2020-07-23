@@ -25,20 +25,20 @@ import simplestyle, sys
 class Cleanup(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
-        self.OptionParser.add_option("-s", "--stroke",
-                        action="store", type="float",
+        self.arg_parser.add_argument("-s", "--stroke",
+                        action="store", type=float,
                         dest="stroke", default=0.5,
                         help="Stroke weight")
-        self.OptionParser.add_option("-o", "--opacity",
-                        action="store", type="float",
+        self.arg_parser.add_argument("-o", "--opacity",
+                        action="store", type=float,
                         dest="opacity", default="100.0",
                         help="Opacity")
 
     def effect(self):
-        if len(self.selected)==0:
+        if len(self.svg.selected)==0:
             self.getAttribs(self.document.getroot())
         else:
-            for id,node in self.selected.iteritems():
+            for id,node in self.svg.selected.items():
                 self.getAttribs(node)
 
     def getAttribs(self,node):
@@ -82,4 +82,4 @@ class Cleanup(inkex.Effect):
 
 if __name__ == '__main__':
     e = Cleanup()
-    e.affect()
+    e.run()
