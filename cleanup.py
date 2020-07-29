@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python3
 '''
 Copyright (C) 2013 Matthew Dockrey  (gfish @ cyphertext.net)
 
@@ -20,19 +20,13 @@ Based on coloreffect.py by Jos Hirth and Aaron C. Spike
 '''
 
 import inkex
-import simplestyle, sys
 
 class Cleanup(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
-        self.arg_parser.add_argument("-s", "--stroke",
-                        action="store", type=float,
-                        dest="stroke", default=0.5,
-                        help="Stroke weight")
-        self.arg_parser.add_argument("-o", "--opacity",
-                        action="store", type=float,
-                        dest="opacity", default="100.0",
-                        help="Opacity")
+        self.arg_parser.add_argument("--stroke_width", type=float, default=0.1, help="Stroke width")
+        self.arg_parser.add_argument("--stroke_units", default="mm", help="Stroke unit")
+        self.arg_parser.add_argument("--opacity", type=float, default="100.0", help="Opacity")
 
     def effect(self):
         if len(self.svg.selected)==0:
@@ -48,23 +42,8 @@ class Cleanup(inkex.Effect):
 
     def changeStyle(self,node):
         if node.attrib.has_key('style'):
-            # References for style attribute:
-            # http://www.w3.org/TR/SVG11/styling.html#StyleAttribute,
-            # http://www.w3.org/TR/CSS21/syndata.html
-            #
-            # The SVG spec is ambiguous as to how style attributes should be parsed.
-            # For example, it isn't clear whether semicolons are allowed to appear
-            # within strings or comments, or indeed whether comments are allowed to
-            # appear at all.
-            #
-            # The processing here is just something simple that should usually work,
-            # without trying too hard to get everything right.
-            # (Won't work for the pathalogical case that someone escapes a property
-            # name, probably does the wrong thing if colon or semicolon is used inside
-            # a comment or string value.)
-            style = node.get('style') # fixme: this will break for presentation attributes!
+            style = node.get('style')
             if style:
-                #inkex.debug('old style:'+style)
                 declarations = style.split(';')
                 for i,decl in enumerate(declarations):
                     parts = decl.split(':', 2)
@@ -72,14 +51,12 @@ class Cleanup(inkex.Effect):
                         (prop, val) = parts
                         prop = prop.strip().lower()
                         if prop == 'stroke-width':
-                            new_val = str(self.options.stroke)
-                            declarations[i] = prop + ':' + new_val
-                        if prop == 'opacity':
+                            new_val = self.svg.unittouu(str(self.options.stroke_width)+self.options.stroke_units)
+                            declarations[i] = prop + ':' + str(new_val)
+                        if prop == 'stroke-opacity':
                             new_val = str(self.options.opacity / 100)
                             declarations[i] = prop + ':' + new_val
-                #inkex.debug('new style:'+';'.join(declarations))
                 node.set('style', ';'.join(declarations))
 
 if __name__ == '__main__':
-    e = Cleanup()
-    e.run()
+    Cleanup().run()
