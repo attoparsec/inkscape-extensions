@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python3
 '''
 Copyright (C) 2013 Matthew Dockrey  (gfish @ cyphertext.net)
 
@@ -20,23 +20,15 @@ Based on gears.py by Aaron Spike and Tavmjong Bah
 '''
 
 import inkex
-import simplestyle
-import sys
 from math import *
-from svg import *
+from fablabchemnitz_svg import *
 from lxml import etree
 
 class Sprockets(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
-        self.arg_parser.add_argument("-t", "--teeth",
-                        action="store", type=int,
-                        dest="teeth", default=24,
-                        help="Number of teeth")
-        self.arg_parser.add_argument("-s", "--size",
-                        action="store", type=str,
-                        dest="size", default="ANSI #40",
-                        help="Chain size (common values ANSI #35, ANSI #40, ANSI #60)")
+        self.arg_parser.add_argument("-t", "--teeth", type=int, default=24, help="Number of teeth")
+        self.arg_parser.add_argument("-s", "--size", default="ANSI #40", help="Chain size (common values ANSI #35, ANSI #40, ANSI #60)")
 
     def get_pitch(self, size):
         return self.svg.unittouu({
@@ -208,7 +200,7 @@ class Sprockets(inkex.Effect):
             
         # Insert as a new element
         sprocket_style = { 'stroke': '#000000',
-                           'stroke-width': '0.1',
+                           'stroke-width': self.svg.unittouu(str(0.1) + "mm"),
                            'fill': 'none'
                            }
         g_attribs = {inkex.addNS('label','inkscape'): 'Sprocket ' + size + "-" + str(N),
