@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Based on gearUtils-03.js by Dr A.R.Collins
 # Latest version:  <www.arc.id.au/gearDrawing.html>
 
@@ -6,7 +7,7 @@
 # ref: YNU Digital Eng Lab Memorandum 05-1
 
 from math import *
-from svg import *
+from fablabchemnitz_svg import *
 
 def genInvolutePolar(Rb, R):  # Rb = base circle radius
     # returns the involute angle as function of radius R.
