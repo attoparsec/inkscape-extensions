@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
-  <_name>Gears2</_name>
+  <name>Gears2</name>
   <id>com.attoparsec.filter.gears</id>
   <param name="tab" type="notebook">
 
