@@ -7,7 +7,7 @@
 # ref: YNU Digital Eng Lab Memorandum 05-1
 
 from math import *
-from fablabchemnitz_svg import *
+from svg import *
 
 def genInvolutePolar(Rb, R):  # Rb = base circle radius
     # returns the involute angle as function of radius R.
