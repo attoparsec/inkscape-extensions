@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
-    <_name>Cleanup</_name>
+    <name>Cleanup</name>
     <id>com.attoparsec.filter.cleanup</id>
-    <param name="stroke_width" type="float" precision="4" min="0" max="5" _gui-text="Stroke width">0.1</param>
-    <param name="stroke_units" _gui-text="Units" type="optiongroup" appearance="minimal">
+    <param name="stroke_width" type="float" precision="4" min="0" max="5" gui-text="Stroke width">0.1</param>
+    <param name="stroke_units" gui-text="Units" type="optiongroup" appearance="combo">
        <option value="px">px</option>
        <option value="pt">pt</option>
        <option value="in">in</option>
        <option value="cm">cm</option>
        <option value="mm">mm</option>
     </param>
-    <param name="opacity" type="float" precision="1" min="0" max="100" _gui-text="Opacity (%)">100.0</param>
+    <param name="opacity" type="float" precision="1" min="0" max="100" gui-text="Opacity (%)">100.0</param>
     <effect needs-live-preview="true">
         <object-type>all</object-type>
         <effects-menu>
@@ -18,6 +18,6 @@
         </effects-menu>	
     </effect>
     <script>
-        <command reldir="extensions" interpreter="python">fablabchemnitz_cleanup.py</command>
+        <command location="inx" interpreter="python">cleanup.py</command>
     </script>
 </inkscape-extension>
