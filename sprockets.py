@@ -21,7 +21,7 @@ Based on gears.py by Aaron Spike and Tavmjong Bah
 
 import inkex
 from math import *
-from fablabchemnitz_svg import *
+from svg import *
 from lxml import etree
 
 class Sprockets(inkex.Effect):
@@ -209,6 +209,4 @@ class Sprockets(inkex.Effect):
                      'd' : svg  }
         g = etree.SubElement(self.svg.get_current_layer(), inkex.addNS('path','svg'), g_attribs)
 
-if __name__ == '__main__':
-    e = Sprockets()
-    e.run()
+Sprockets().run()
