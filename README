@@ -8,7 +8,7 @@ To use, simply place these files in your Inkscape extensions directory ($HOME/.c
 
 Also included is cleanup.py, which is useful for adjusting the stroke weight and opacity of large groups of Inkscape objects, something the author has had to do far too often to get them to import properly into laser cutting software.
 
-Created by Matthew Dockrey (AKA Fish, AKA the Attoparsec guy): gfish@cyphertext.net
+Created by Matthew Dockrey (AKA Fish, AKA the Attoparsec guy): mrd@attoparsec.com
 
 Gears2.py and involute.py are based on http://arc.id.au/GearDrawing.html by Dr A.R.Collins.
 
